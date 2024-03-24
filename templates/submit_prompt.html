@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link href="./static/main.css" rel="stylesheet"/>
+    <title>Создание SQL</title>
+</head>
+<body>
+<div class="container">
+    <form id="myForm">
+        <label for="prompt">Введите свой запрос:</label>
+        <input type="text" id="prompt" name="prompt" required>
+        <button type="submit">
+            <span class="button-text">Сгенерировать</span>
+            <span class="loading-text" style="display: none;">Генерация<span class="dots"></span></span>
+        </button>
+    </form>
+    <div class="response-container">
+        <label for="response">Сгенерированный SQL запрос:</label>
+        <textarea id="response" readonly></textarea>
+    </div>
+</div>
+
+<script>
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var prompt = document.getElementById("prompt").value;
+        var data = {prompt: prompt};
+
+        var buttonText = document.querySelector(".button-text");
+        var loadingText = document.querySelector(".loading-text");
+        var dots = document.querySelector(".dots");
+
+        buttonText.style.display = "none";
+        loadingText.style.display = "inline";
+
+        var dotCount = 0;
+        var dotAnimation = setInterval(function() {
+        dots.textContent = ".".repeat(dotCount);
+        dotCount = (dotCount + 1) % 4;
+        }, 500);
+
+        fetch("{{action_url}}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // Display the response in the textarea
+            var sqlQuery = data.sql_query;
+            document.getElementById("response").value = sqlQuery;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        })
+        .finally(() => {
+          clearInterval(dotAnimation);
+          buttonText.style.display = "inline";
+          loadingText.style.display = "none";
+        });
+    });
+</script>
+
+</body>
+</html>
+
