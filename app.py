@@ -1,13 +1,12 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Form, Body
-from fastapi.responses import FileResponse, HTMLResponse
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from db import db
-from guardian import guardian
+from guardian.guardian import anti_fraud
 from sql_generator import sql_generator
 
 app = FastAPI()
@@ -33,7 +32,7 @@ def prompt_form(request: Request):
 
 @app.post("/submit_prompt")
 async def prompt_handler(model_request: ModelRequest) -> dict[str, str]:
-    if not guardian.is_approved(model_request.prompt):
+    if not anti_fraud.is_approved(model_request.prompt):
         raise HTTPException(status_code=422, detail="Запрос не относится к выбранной базе данных")
     sql_query = await sql_generator.generate_sql(model_request.prompt)
     return {"sql_query": sql_query}
