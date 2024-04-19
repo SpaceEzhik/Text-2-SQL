@@ -1,5 +1,5 @@
 CREATE TABLE Addresses (
-	address_id INTEGER NOT NULL, -- ID адреса
+	address_id INTEGER NOT NULL AUTO_INCREMENT, -- ID адреса
 	line_1 VARCHAR(80), -- Основная информация об адресе (улица, дом, номер квартиры)
 	line_2 VARCHAR(80), -- Дополнительная информация об адресе
 	city VARCHAR(50), -- Название города
@@ -18,7 +18,7 @@ CREATE TABLE Courses (
 );
 
 CREATE TABLE People (
-	person_id INTEGER NOT NULL, -- ID человека
+	person_id INTEGER NOT NULL AUTO_INCREMENT, -- ID человека
 	first_name VARCHAR(255), -- Имя
 	middle_name VARCHAR(255), -- Второе имя
 	last_name VARCHAR(255), -- Фамилия
@@ -30,7 +30,7 @@ CREATE TABLE People (
 );
 
 CREATE TABLE Candidates (
-	candidate_id INTEGER NOT NULL , -- ID кандидата 
+	candidate_id INTEGER NOT NULL , -- ID кандидата
 	candidate_details VARCHAR(255), -- Дополнительная информация о кандидате
 	PRIMARY KEY (candidate_id),
 	FOREIGN KEY (candidate_id) REFERENCES People (person_id)
@@ -56,14 +56,14 @@ CREATE TABLE Candidate_Assessments (
 	candidate_id INTEGER NOT NULL, -- ID кандидата
 	qualification CHAR(15) NOT NULL, -- Оценка за вступительный экзамен
 	assessment_date DATETIME NOT NULL, -- Дата вступительного экзамена
-	asessment_outcome_code CHAR(15) NOT NULL, -- Результат вступительного экзамена (Pass или Fail)
+	assessment_outcome_code CHAR(15) NOT NULL, -- Результат вступительного экзамена (Pass или Fail)
 	PRIMARY KEY (candidate_id, qualification),
 	FOREIGN KEY (candidate_id) REFERENCES Candidates (candidate_id)
 );
 
 CREATE TABLE Student_Course_Registrations (
 	student_id INTEGER NOT NULL, -- ID студента
-	course_id INTEGER NOT NULL, -- ID курса
+	course_id VARCHAR(100) NOT NULL, -- ID курса
 	registration_date DATETIME NOT NULL, -- Дата регистрации на курс
 	PRIMARY KEY (student_id, course_id),
 	FOREIGN KEY (student_id) REFERENCES Students (student_id),
@@ -72,9 +72,9 @@ CREATE TABLE Student_Course_Registrations (
 
 CREATE TABLE Student_Course_Attendance (
 	student_id INTEGER NOT NULL, -- ID студента
-	course_id INTEGER NOT NULL, -- ID курса
+	course_id VARCHAR(100) NOT NULL, -- ID курса
 	date_of_attendance DATETIME NOT NULL, -- Дата прохождения курса
-	other_details VARCHAR, -- Дополнительная информация о прохождении курса
+	other_details VARCHAR(255), -- Дополнительная информация о прохождении курса
 	PRIMARY KEY (student_id, course_id),
 	FOREIGN KEY (student_id, course_id) REFERENCES Student_Course_Registrations (student_id,course_id)
 );
