@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Результат запроса</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: #f8f9fa;
+            box-sizing: border-box; /* Ensures border-box is used for all elements */
+        }
+        *, *::before, *::after {
+            box-sizing: inherit; /* Inherits box-sizing from the html element */
+        }
+        .fullscreen-wrapper {
+            height: calc(100vh - 40px);
+            width: calc(100vw - 40px);
+            margin: auto; /* Center the frame */
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background: white;
+            overflow: hidden;
+        }
+        .table-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background-color: #ffffff;
+            box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1);
+            border-bottom: 2px solid #dee2e6;
+        }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6 !important;
+        }
+        .btn-bottom {
+            margin-top: auto;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-custom {
+          background-color: #4CAF50;
+          border-color: #4CAF50;
+        }
+
+        .btn-custom:hover,
+        .btn-custom:focus,
+        .btn-custom:active,
+        .btn-custom.active,
+        .open > .btn-custom.dropdown-toggle {
+          background-color: #45a049;
+          border-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="fullscreen-wrapper">
+    <div class="table-scroll">
+        <table class="table table-bordered">
+            <thead class="sticky-top">
+            <tr>
+                {% if data %}
+                {% for header in data[0].keys() %}
+                <th>{{ header }}</th>
+                {% endfor %}
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+            <tr>
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-bottom">
+        <a href="{{ request.headers.get('referer', url_for('prompt_form')) }}">
+            <button class="btn btn-primary btn-custom" onclick="goBackAndClose()">Назад к генерации</button>
+        </a>
+    </div>
+</div>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function goBackAndClose() {
+        if (window.opener && !window.opener.closed) {
+            window.opener.focus();
+            window.close();
+        } else {
+            window.history.back();
+        }
+    }
+</script>
+</body>
+</html>
