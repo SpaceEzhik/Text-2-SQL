@@ -1,5 +1,6 @@
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
+from config import settings
 
 
 class FineTunedBERT:
@@ -20,5 +21,4 @@ class FineTunedBERT:
         return predicted_class
 
 
-# TODO: поместить путь к модели в конфиг
-anti_fraud = FineTunedBERT(r"C:\Users\mrlel\PycharmProjects\Text-2-SQL\guardian\ruBERT_1.0acc")
+anti_fraud = FineTunedBERT(settings.guardian.path)
