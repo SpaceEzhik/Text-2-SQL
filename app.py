@@ -6,7 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.db import get_db_session, execute_sql
+from db.crud import execute_sql
+from db.db_helper import db_helper
 from guardian.guardian import anti_fraud
 from sql_generator import sql_generator
 
@@ -47,7 +48,7 @@ async def prompt_handler(model_request: ModelRequest) -> dict[str, str]:
 
 @app.post("/execute_sql", response_class=HTMLResponse)
 async def execute_generated_sql(request: Request, db_request: DBRequest,
-                                db_session: AsyncSession = Depends(get_db_session)):
+                                db_session: AsyncSession = Depends(db_helper.session_dependency)):
     result = await execute_sql(db_session, db_request.sql_query)
     return templates.TemplateResponse("table.html", {"request": request, "data": result})
 

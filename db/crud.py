@@ -1,17 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.exc import SQLAlchemyError, ProgrammingError
-
-DATABASE_URL = "[ДАННЫЕ УДАЛЕНЫ]"
-engine = create_async_engine(DATABASE_URL)
-
-async_session = async_sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
-
-
-async def get_db_session() -> AsyncSession:
-    async with async_session() as session:
-        yield session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 async def execute_sql(db_session: AsyncSession, sql_query: str) -> tuple[dict, ...] | None:
