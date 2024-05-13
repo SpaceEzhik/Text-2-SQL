@@ -7,13 +7,13 @@ GUARDIAN_PATH = BASE_DIR / "guardian" / "ruBERT_1.0acc"
 
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
 OLLAMA_CONFIG = {
-    "model": "llama3:8b-instruct-q4_0",  # TODO: использвать instruct модель (в идеале собственноручно дообученную)
+    "model": "llama3:8b-instruct-q4_0",
     "stream": False,
     "keep_alive": "5m",
 }
 
 PROMPT_TEMPLATE = """
-### Instructions to the Model:
+### Instructions:
 Your task is convert a prompt into a SQL query, given a database schema.
 Adhere to these rules:
 - **Deliberately go through the question and database schema word by word** to answer the question correctly.
@@ -112,7 +112,8 @@ Based on your instructions, here is the SQL query (with no additional text, symb
 
 
 class DbSettings(BaseModel):
-    url: str = "[ДАННЫЕ УДАЛЕНЫ]"
+    url_api: str = "[ДАННЫЕ УДАЛЕНЫ]"
+    url_admin: str = "[ДАННЫЕ УДАЛЕНЫ]"
     echo: bool = False
 
 
