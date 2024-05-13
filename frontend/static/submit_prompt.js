@@ -52,7 +52,7 @@ document.getElementById("execute-button").addEventListener("click", function(eve
     event.preventDefault();
     var sql_query = document.getElementById("response").value;
 
-    if (String(response).trim() === "") {
+    if (sql_query.trim() === "") {
         alert("Ошибка: Отсутствует SQL запрос");
         return;
     }

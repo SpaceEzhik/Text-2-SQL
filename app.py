@@ -13,9 +13,9 @@ from sql_generator import sql_generator
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/frontend/static", StaticFiles(directory="./frontend/static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="frontend/templates")
 
 
 class ModelRequest(BaseModel):
