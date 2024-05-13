@@ -56,7 +56,7 @@ CREATE TABLE Candidate_Assessments (
 	candidate_id INTEGER NOT NULL,
 	qualification CHAR(15) NOT NULL,
 	assessment_date DATETIME NOT NULL,
-	asessment_outcome_code CHAR(15) NOT NULL,
+	assessment_outcome_code CHAR(15) NOT NULL,
 	PRIMARY KEY (candidate_id, qualification),
 	FOREIGN KEY (candidate_id) REFERENCES Candidates (candidate_id)
 );
