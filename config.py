@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from pathlib import Path
 
+from starlette.staticfiles import StaticFiles
+from starlette.templating import Jinja2Templates
+
 BASE_DIR = Path(__file__).parent
 GUARDIAN_PATH = BASE_DIR / "guardian" / "ruBERT_1.0acc"
 
@@ -10,6 +13,11 @@ OLLAMA_CONFIG = {
     "model": "llama3:8b-instruct-q4_0",
     "stream": False,
     "keep_alive": "5m",
+}
+
+USER_GROUP_RIGHTS = {
+    "developer": ("select", "insert", "update", "delete"),
+    "manager": ("select",),
 }
 
 PROMPT_TEMPLATE = """
@@ -117,6 +125,19 @@ class DbSettings(BaseModel):
     echo: bool = False
 
 
+class AuthJWTSettings(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 1
+    refresh_token_expire_days: int = 1
+    bcrypt_work_factor: int = 12
+
+
+class SecuritySettings(BaseModel):
+    user_group_rights: dict[str, tuple] = USER_GROUP_RIGHTS
+
+
 class GuardianSettings(BaseModel):
     path: str = str(GUARDIAN_PATH)
 
@@ -127,10 +148,22 @@ class CoreLLMSettings(BaseModel):
     prompt: str = PROMPT_TEMPLATE
 
 
+class FrontendSettings(BaseModel):
+    frontend_path: Path = BASE_DIR / "frontend"
+    templates_path: Path = BASE_DIR / "frontend" / "templates"
+    static_path: Path = frontend_path / "static"
+    static_path_relative: str = (
+        str(static_path).replace(str(BASE_DIR), "").replace("\\", "/")
+    )
+
+
 class Settings(BaseSettings):
     db: DbSettings = DbSettings()
+    auth_jwt: AuthJWTSettings = AuthJWTSettings()
+    security: SecuritySettings = SecuritySettings()
     guardian: GuardianSettings = GuardianSettings()
     core_llm: CoreLLMSettings = CoreLLMSettings()
+    frontend: FrontendSettings = FrontendSettings()
 
 
 settings = Settings()

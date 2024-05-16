@@ -60,4 +60,9 @@ db_helper_api = DatabaseHelper(
     echo=settings.db.echo,
 )
 
+db_helper_admin = DatabaseHelper(
+    url=settings.db.url_admin,
+    echo=settings.db.echo,
+)
+
 db_error_handler = DatabaseErrorHandler(default_error_detail="¯\\_(ツ)_/¯")

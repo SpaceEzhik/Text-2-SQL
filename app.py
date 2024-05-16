@@ -3,27 +3,20 @@ from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import settings
 from db.crud import execute_sql
 from db.db_helpers import db_helper_api
+from frontend.frontend import static_files, templates
 from guardian.guardian import anti_fraud
+from schemas import ModelRequest, DBRequest
+from security.auth import router as auth_router
 from sql_generator import sql_generator
 
 app = FastAPI()
-
-app.mount("/frontend/static", StaticFiles(directory="./frontend/static"), name="static")
-
-templates = Jinja2Templates(directory="frontend/templates")
-
-
-class ModelRequest(BaseModel):
-    prompt: str
-
-
-class DBRequest(BaseModel):
-    sql_query: str
+app.include_router(auth_router)
+app.mount(settings.frontend.static_path_relative, static_files, name="static")
 
 
 @app.get("/")

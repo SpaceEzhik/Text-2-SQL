@@ -1,8 +1,12 @@
 from fastapi import HTTPException, status
-from sqlalchemy import text
+from sqlalchemy import text, select, update
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.db_helpers import db_error_handler
+from db.models import User
+from schemas import CreateUser
+from security.utils import hash_password
 
 
 async def execute_sql(
@@ -36,3 +40,39 @@ async def execute_sql(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Данный тип запросов недоступен",
         )
+
+
+async def create_user(db_session: AsyncSession, user_in: CreateUser) -> User | None:
+    user = User(**user_in.model_dump())
+    user.password = hash_password(user.password)
+    db_session.add(user)
+    try:
+        await db_session.commit()
+    except Exception as e:
+        await db_session.rollback()
+        raise db_error_handler.handle(e)
+    return user
+
+
+async def get_user_by_email(db_session: AsyncSession, email: str) -> User | None:
+    query = select(User).where(User.email == email)
+    result = await db_session.execute(query)
+    user = result.scalars().first()
+    return user
+
+
+async def update_user_refresh_token(
+    db_session: AsyncSession, token: str, email: str
+) -> None:
+    query = (
+        update(User)
+        .where(User.email == email)
+        .values(refresh_token=token)
+        .execution_options(synchronize_session="fetch")
+    )
+    try:
+        result = await db_session.execute(query)
+        await db_session.commit()
+    except Exception as e:
+        await db_session.rollback()
+        raise db_error_handler.handle(e)
