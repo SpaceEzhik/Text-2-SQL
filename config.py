@@ -27,6 +27,7 @@ Adhere to these rules:
 - **Deliberately go through the question and database schema word by word** to answer the question correctly.
 - **Use table aliases** to avoid ambiguity. For example, `SELECT table1.col1, table2.col1 FROM table1 JOIN table2 ON table1.id = table2.id`.
 - **Ensure that the output contains only the SQL query** and **no additional text or comments**.
+- **Use MySQL SQL dialect**
 
 ### Input:
 Generate a SQL query that meet the prompt `{0}`.
@@ -126,16 +127,17 @@ class DbSettings(BaseModel):
 
 
 class AuthJWTSettings(BaseModel):
-    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
-    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    private_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-public.pem"
     algorithm: str = "RS256"
-    access_token_expire_minutes: int = 1
+    access_token_expire_minutes: int = 10
     refresh_token_expire_days: int = 1
     bcrypt_work_factor: int = 12
 
 
 class SecuritySettings(BaseModel):
     user_group_rights: dict[str, tuple] = USER_GROUP_RIGHTS
+    auth_url_prefix: str = "/auth"
 
 
 class GuardianSettings(BaseModel):
@@ -157,6 +159,21 @@ class FrontendSettings(BaseModel):
     )
 
 
+class RunConfig(BaseModel):
+    host: str = "127.0.0.1"
+    port: int = 1337
+
+
+class ApiV1Settings(BaseModel):
+    prefix: str = "/v1"
+
+
+class ApiSettings(BaseModel):
+    prefix: str = "/api"
+    v1: ApiV1Settings = ApiV1Settings()
+    current_root_url: str = prefix + v1.prefix
+
+
 class Settings(BaseSettings):
     db: DbSettings = DbSettings()
     auth_jwt: AuthJWTSettings = AuthJWTSettings()
@@ -164,6 +181,8 @@ class Settings(BaseSettings):
     guardian: GuardianSettings = GuardianSettings()
     core_llm: CoreLLMSettings = CoreLLMSettings()
     frontend: FrontendSettings = FrontendSettings()
+    run: RunConfig = RunConfig()
+    api: ApiSettings = ApiSettings()
 
 
 settings = Settings()

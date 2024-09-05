@@ -40,3 +40,9 @@ class CreateUser(BaseModel):
                 f"Invalid user {group=}. Must be one of: {allowed_user_groups}"
             )
         return group
+
+
+class TokenInfo(BaseModel):
+    access_token: str
+    refresh_token: str | None = None
+    # token_type: str = "Bearer"
