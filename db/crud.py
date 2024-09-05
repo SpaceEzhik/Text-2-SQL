@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy import text, select, update
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.db_helpers import db_error_handler
@@ -61,7 +62,7 @@ async def get_user_by_email(db_session: AsyncSession, email: str) -> User | None
 
 
 async def update_user_refresh_token(
-    db_session: AsyncSession, token: str | None, email: str
+    db_session: AsyncSession, token: str, email: str
 ) -> None:
     query = (
         update(User)

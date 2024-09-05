@@ -100,31 +100,3 @@ document.getElementById("execute-button").addEventListener("click", function(eve
         loadingText.style.display = "none";
     });
 });
-
-document.getElementById("logout-button").addEventListener("click", function(event) {
-        event.preventDefault();
-
-        fetch(logoutURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            // If you need to send any data with the logout request, add it here
-            // body: JSON.stringify({ /* your data */ }),
-        })
-        .then(response => {
-            if (response.ok) {
-                // Successful logout
-                console.log("Logout successful");
-                window.location.href = redirectURL;
-            } else {
-                // Handle logout error
-                console.error("Logout failed");
-                // You might want to show an error message to the user here
-            }
-        })
-        .catch(error => {
-            console.error("Error during logout:", error);
-            // You might want to show an error message to the user here
-        });
-});
