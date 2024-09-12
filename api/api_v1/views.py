@@ -12,7 +12,7 @@ from guardian import anti_fraud
 from schemas import ModelRequest, DBRequest
 from security import auth_prefix
 from security.validation import check_auth_user
-from sql_generator import sql_generator
+from sql_generator import generate_sql
 
 router = APIRouter(
     dependencies=[Depends(check_auth_user)],
@@ -49,7 +49,7 @@ async def prompt_handler(model_request: ModelRequest) -> dict[str, str]:
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Запрос не относится к выбранной базе данных",
         )
-    sql_query = await sql_generator.generate_sql(model_request.prompt)
+    sql_query = await generate_sql(model_request.prompt)
     return {"sql_query": sql_query}
 
 

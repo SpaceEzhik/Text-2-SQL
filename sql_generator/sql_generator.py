@@ -16,4 +16,5 @@ async def generate_sql(question: str) -> str:
             timeout=100,
         )
         query = response.json()["response"].strip(" `\n")
+        # TODO: add proper parsing/processing for the model output
     return query
