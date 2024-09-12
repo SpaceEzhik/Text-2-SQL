@@ -23,7 +23,23 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         },
         body: JSON.stringify(data)
     })
+//    .then(response => { //если прилетает редирект, то ничего  страшного
+//        if (!response.ok) {
+//            return response.json().then(err => { throw err; });
+//        }
+//        return response.json();
+//    })
     .then(response => {
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("text/html") !== -1) {
+            // If the response is HTML, open it in a new window
+            return response.text().then(html => {
+                const newWindow = window.open("", "_blank");
+                newWindow.document.write(html);
+                newWindow.document.close();
+                throw new Error("Redirected to HTML page");
+            });
+        }
         if (!response.ok) {
             return response.json().then(err => { throw err; });
         }
@@ -35,8 +51,17 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         var sqlQuery = data.sql_query;
         document.getElementById("response").value = sqlQuery;
     })
+//    .catch(error => {
+//        console.error("Error:", error);
+//        let errorMessage = error.detail || "Произошла неизвестная ошибка";
+//        alert("Вам необходимо изменить запрос, так как произошла ошибка:\n" + errorMessage);
+//    })
     .catch(error => {
         console.error("Error:", error);
+        if (error.message === "Redirected to HTML page") {
+            // This is not a real error, just a way to break out of the promise chain
+            return;
+        }
         let errorMessage = error.detail || "Произошла неизвестная ошибка";
         alert("Вам необходимо изменить запрос, так как произошла ошибка:\n" + errorMessage);
     })
