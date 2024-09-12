@@ -8,7 +8,7 @@ from db.crud import execute_sql
 from db.db_helpers import db_helper_api
 
 from frontend.frontend import templates
-from guardian.guardian import anti_fraud
+from guardian import anti_fraud
 from schemas import ModelRequest, DBRequest
 from security import auth_prefix
 from security.validation import check_auth_user

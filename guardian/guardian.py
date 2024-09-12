@@ -1,6 +1,5 @@
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
-from config import settings
 
 
 class FineTunedBERT:
@@ -11,7 +10,7 @@ class FineTunedBERT:
             model_path, num_labels=2
         ).to(self.device)
 
-    def predict(self, text: str):
+    def predict(self, text: str) -> int:
         inputs = self.tokenizer(
             text, padding=True, truncation=True, max_length=128, return_tensors="pt"
         )
@@ -22,7 +21,4 @@ class FineTunedBERT:
             outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
             logits = outputs.logits
             predicted_class = torch.argmax(logits, dim=1).item()
-        return predicted_class
-
-
-anti_fraud = FineTunedBERT(settings.guardian.path)
+        return predicted_class  # 1 == not fraud class, 0 == fraud class
