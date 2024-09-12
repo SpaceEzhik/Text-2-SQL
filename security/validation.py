@@ -1,5 +1,6 @@
 from fastapi import Depends, HTTPException, Form, status
-from fastapi.security import OAuth2PasswordBearer
+
+# from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.crud import get_user_by_email
@@ -15,9 +16,9 @@ from .helpers import (
 import security.utils as auth_utils
 from schemas import UserSchema
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/login/",
-)
+# oauth2_scheme = OAuth2PasswordBearer(
+#     tokenUrl="/auth/login/",
+# )
 
 
 def validate_token_type(

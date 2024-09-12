@@ -17,9 +17,9 @@ class RefreshRequiredException(Exception):
 
 def unauthorized_exception_handler(request: Request, exc: UnauthorizedException):
     return templates.TemplateResponse(
+        request,
         "redirect.html",
         {
-            "request": request,
             "request_type": "get",
             "redirect_url": auth_prefix + "/login",
         },
@@ -28,10 +28,13 @@ def unauthorized_exception_handler(request: Request, exc: UnauthorizedException)
 
 def refresh_required_exception_handler(request: Request, exc: RefreshRequiredException):
     return templates.TemplateResponse(
+        request,
         "redirect.html",
         {
-            "request": request,
             "request_type": "post",
             "redirect_url": auth_prefix + "/refresh",
         },
     )
+
+
+# TODO: get rid of auto-redirect hell I've done (via new frontend)

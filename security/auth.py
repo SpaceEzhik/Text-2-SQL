@@ -1,11 +1,13 @@
 from fastapi import Depends, Response, Request, HTTPException, status, APIRouter
-from fastapi.security import HTTPBearer
+
+# from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
 from db.db_helpers import db_helper_admin
 from frontend.frontend import templates
 from . import auth_prefix
+from .exceptions import UnauthorizedException
 from .helpers import (
     get_current_access_token_payload,
     get_current_refresh_token_payload,
@@ -18,10 +20,10 @@ from .validation import (
 )
 from schemas import UserSchema, TokenInfo
 
-http_bearer = HTTPBearer(auto_error=False)
+# http_bearer = HTTPBearer(auto_error=False)
 router = APIRouter(
     prefix=auth_prefix,
-    dependencies=[Depends(http_bearer)],
+    # dependencies=[Depends(http_bearer)],
 )
 
 
@@ -30,9 +32,9 @@ async def auth_user_issue_jwt(
     request: Request,
 ):
     return templates.TemplateResponse(
+        request,
         "login.html",
         {
-            "request": request,
             "login_url": request.url_for("auth_user_issue_jwt"),
             "redirect_url": settings.api.current_root_url,
         },
@@ -65,7 +67,7 @@ async def auth_user_logout(
         db_session,
         user=user,
     )
-    return {"sas": "removed"}
+    return {"logout": "success"}
 
 
 @router.post(
@@ -84,11 +86,11 @@ async def auth_refresh_jwt(
     if not (
         user.is_active and user.refresh_token == request.cookies.get("refresh_token")
     ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Пользователь деактивирован",
-        )
-
+        # raise HTTPException(
+        #     status_code=status.HTTP_403_FORBIDDEN,
+        #     detail="Пользователь деактивирован",
+        # )
+        raise UnauthorizedException("user deactivated, login required")
     access_token, refresh_token = await create_and_store_tokens(
         response,
         db_session,

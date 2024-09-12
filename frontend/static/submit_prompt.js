@@ -1,4 +1,3 @@
-
 document.getElementById("myForm").addEventListener("submit", function(event) {
     event.preventDefault();
     var prompt = document.getElementById("prompt").value;

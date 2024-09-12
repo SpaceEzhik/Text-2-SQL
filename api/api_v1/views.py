@@ -22,17 +22,18 @@ router = APIRouter(
 @router.get("/")
 def root(request: Request):
     return templates.TemplateResponse(
+        request,
         "index.html",
-        {"request": request, "action_url": request.url_for("prompt_form")},
+        {"action_url": request.url_for("prompt_form")},
     )
 
 
 @router.get("/generate_sql", response_class=HTMLResponse)
 def prompt_form(request: Request):
     return templates.TemplateResponse(
+        request,
         "submit_prompt.html",
         {
-            "request": request,
             "generate_url": request.url_for("prompt_handler"),
             "execute_url": request.url_for("execute_generated_sql"),
             "logout_url": str(request.base_url)[:-1] + auth_prefix + "/logout",
@@ -59,6 +60,4 @@ async def execute_generated_sql(
     db_session: AsyncSession = Depends(db_helper_api.session_dependency),
 ):
     result = await execute_sql(db_session, db_request.sql_query)
-    return templates.TemplateResponse(
-        "table.html", {"request": request, "data": result}
-    )
+    return templates.TemplateResponse(request, "table.html", {"data": result})

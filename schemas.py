@@ -13,17 +13,13 @@ class DBRequest(BaseModel):
 
 
 class UserSchema(BaseModel):
-    # model_config = ConfigDict(strict=True)
+    model_config = ConfigDict(strict=True, from_attributes=True)
 
     email: EmailStr
     password: str
     user_group: str
     is_active: bool
-    refresh_token: str
-
-    class Config:
-        from_attributes = True
-        strict = True
+    refresh_token: str | None
 
 
 class CreateUser(BaseModel):
