@@ -5,7 +5,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from db.crud import execute_sql
-from db.db_helpers import db_helper_api
+from db import db_helper_api
 
 from frontend.frontend import templates
 from guardian import anti_fraud

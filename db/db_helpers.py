@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -5,8 +7,6 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
 )
 from fastapi import status
-
-from config import settings
 
 
 class DatabaseHelper:
@@ -53,16 +53,3 @@ class DatabaseErrorHandler:
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=error_detail
         )
-
-
-db_helper_api = DatabaseHelper(
-    url=settings.db.url_api,
-    echo=settings.db.echo,
-)
-
-db_helper_admin = DatabaseHelper(
-    url=settings.db.url_admin,
-    echo=settings.db.echo,
-)
-
-db_error_handler = DatabaseErrorHandler(default_error_detail="¯\\_(ツ)_/¯")

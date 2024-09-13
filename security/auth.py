@@ -4,7 +4,7 @@ from fastapi import Depends, Response, Request, HTTPException, status, APIRouter
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
-from db.db_helpers import db_helper_admin
+from db import db_helper_admin
 from frontend.frontend import templates
 from . import auth_prefix
 from .exceptions import UnauthorizedException

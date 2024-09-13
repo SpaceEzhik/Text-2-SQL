@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException, Form, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.crud import get_user_by_email
-from db.db_helpers import db_helper_admin
+from db import db_helper_admin
 from .exceptions import UnauthorizedException, RefreshRequiredException
 from .helpers import (
     TOKEN_TYPE_FIELD,

@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
-from sqlalchemy import text, select, update
+from sqlalchemy import text, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.db_helpers import db_error_handler
+from db import db_error_handler
 from db.models import User
 from schemas import CreateUser
 from security.utils import hash_password
@@ -51,6 +51,16 @@ async def create_user(db_session: AsyncSession, user_in: CreateUser) -> User | N
         await db_session.rollback()
         raise db_error_handler.handle(e)
     return user
+
+
+async def delete_user_by_email(db_session: AsyncSession, email: str) -> None:
+    query = delete(User).where(User.email == email)
+    result = await db_session.execute(query)
+    try:
+        await db_session.commit()
+    except Exception as e:
+        await db_session.rollback()
+        raise db_error_handler.handle(e)
 
 
 async def get_user_by_email(db_session: AsyncSession, email: str) -> User | None:

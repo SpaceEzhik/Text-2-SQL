@@ -10,7 +10,7 @@ from starlette.responses import Response
 
 from config import settings
 from db.crud import update_user_refresh_token, get_user_by_email
-from db.db_helpers import db_helper_admin
+from db import db_helper_admin
 from schemas import UserSchema
 from security import utils as auth_utils
 from security.utils import encode_jwt

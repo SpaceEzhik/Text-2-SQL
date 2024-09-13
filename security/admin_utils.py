@@ -2,7 +2,7 @@ import asyncio
 
 from db.crud import create_user
 from schemas import CreateUser
-from db.db_helpers import db_helper_admin
+from db import db_helper_admin
 
 
 async def main():
