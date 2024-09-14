@@ -5,7 +5,7 @@ from db.crud import execute_sql, create_user, get_user_by_email, delete_user_by_
 from schemas import CreateUser
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_db_availability():
     async for db_session in db_helper_api.session_dependency():
         result = await execute_sql(db_session, "select 1")
@@ -13,7 +13,7 @@ async def test_db_availability():
         assert len(result) == 1
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_user_db_cycle():
     async for db_session in db_helper_admin.session_dependency():
         test_user = CreateUser(

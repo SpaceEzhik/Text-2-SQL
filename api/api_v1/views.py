@@ -11,7 +11,8 @@ from frontend.frontend import templates
 from guardian import anti_fraud
 from schemas import ModelRequest, DBRequest
 from security import auth_prefix
-from security.validation import check_auth_user
+from security.helpers import get_user_group_from_token
+from security.validation import check_auth_user, validate_query_type
 from sql_generator import generate_sql
 
 router = APIRouter(
@@ -58,6 +59,8 @@ async def execute_generated_sql(
     request: Request,
     db_request: DBRequest,
     db_session: AsyncSession = Depends(db_helper_api.session_dependency),
+    user_group: str = Depends(get_user_group_from_token),
 ):
+    validate_query_type(db_request.sql_query, user_group)
     result = await execute_sql(db_session, db_request.sql_query)
     return templates.TemplateResponse(request, "table.html", {"data": result})

@@ -3,7 +3,7 @@ import pytest
 from sql_generator import generate_sql
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 @pytest.mark.slow
 async def test_generator_availability():
     model_output = await generate_sql("return People table")

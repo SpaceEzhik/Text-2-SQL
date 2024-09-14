@@ -3,6 +3,7 @@ from fastapi import Depends, HTTPException, Form, status
 # from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import settings
 from db.crud import get_user_by_email
 from db import db_helper_admin
 from .exceptions import UnauthorizedException, RefreshRequiredException
@@ -66,7 +67,7 @@ async def validate_auth_user(
 def check_auth_user(
     access_token: str = Depends(access_token_getter),
     refresh_token: str = Depends(refresh_token_getter),
-):
+) -> None:
     try:
         refresh_token = get_current_refresh_token_payload(refresh_token)
     except Exception as e:
@@ -76,3 +77,13 @@ def check_auth_user(
         access_token = get_current_access_token_payload(access_token)
     except Exception as e:
         raise RefreshRequiredException("refresh required")
+
+
+def validate_query_type(sql_query: str, user_group: str) -> bool:
+    query_type = sql_query.strip().lower().split()[0]
+    if query_type in settings.security.user_group_rights[user_group]:
+        return True
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Данный тип запросов Вам недоступен",
+    )

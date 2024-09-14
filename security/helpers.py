@@ -152,5 +152,7 @@ async def get_user_by_token_sub(
     )
 
 
-def get_user_group_from_token():
-    pass
+def get_user_group_from_token(
+    payload: dict = Depends(get_current_access_token_payload),
+):
+    return payload["user_group"]
