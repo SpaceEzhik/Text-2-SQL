@@ -4,6 +4,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
+from config import settings
 from db.crud import execute_sql
 from db import db_helper_api
 from frontend import templates
@@ -49,7 +50,7 @@ async def prompt_handler(model_request: ModelRequest) -> dict[str, str]:
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Запрос не относится к выбранной базе данных",
         )
-    sql_query = await generate_sql(model_request.prompt)
+    sql_query = await generate_sql(model_request.prompt, settings.core_llm.db_context)
     return {"sql_query": sql_query}
 
 

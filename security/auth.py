@@ -82,7 +82,6 @@ async def auth_refresh_jwt(
     payload: dict = Depends(get_current_refresh_token_payload),
 ):
     user: UserSchema = await get_user_by_token_sub(payload, db_session)
-    print(user)
     if not (
         user.is_active and user.refresh_token == request.cookies.get("refresh_token")
     ):
