@@ -23,12 +23,6 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
         },
         body: JSON.stringify(data)
     })
-//    .then(response => { //если прилетает редирект, то ничего  страшного
-//        if (!response.ok) {
-//            return response.json().then(err => { throw err; });
-//        }
-//        return response.json();
-//    })
     .then(response => {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("text/html") !== -1) {
@@ -47,15 +41,9 @@ document.getElementById("myForm").addEventListener("submit", function(event) {
     })
     .then(data => {
         console.log(data);
-        // Display the response in the textarea
         var sqlQuery = data.sql_query;
         document.getElementById("response").value = sqlQuery;
     })
-//    .catch(error => {
-//        console.error("Error:", error);
-//        let errorMessage = error.detail || "Произошла неизвестная ошибка";
-//        alert("Вам необходимо изменить запрос, так как произошла ошибка:\n" + errorMessage);
-//    })
     .catch(error => {
         console.error("Error:", error);
         if (error.message === "Redirected to HTML page") {
@@ -106,7 +94,7 @@ document.getElementById("execute-button").addEventListener("click", function(eve
         if (!response.ok) {
             return response.json().then(err => { throw err; });
         }
-        return response.text(); // Get the response as text instead of JSON
+        return response.text();
     })
     .then(html => {
         var newWindow = window.open("", "_blank");
@@ -133,22 +121,16 @@ document.getElementById("logout-button").addEventListener("click", function(even
             headers: {
                 "Content-Type": "application/json"
             },
-            // If you need to send any data with the logout request, add it here
-            // body: JSON.stringify({ /* your data */ }),
         })
         .then(response => {
             if (response.ok) {
-                // Successful logout
                 console.log("Logout successful");
                 window.location.href = redirectURL;
             } else {
-                // Handle logout error
                 console.error("Logout failed");
-                // You might want to show an error message to the user here
             }
         })
         .catch(error => {
             console.error("Error during logout:", error);
-            // You might want to show an error message to the user here
         });
 });

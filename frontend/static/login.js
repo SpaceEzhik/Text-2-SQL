@@ -14,9 +14,9 @@
                 throw errorData;
             }
 
-            const result = await response.text(); // Get the response as text instead of JSON
+            const result = await response.text();
             console.log('Response:', result);
-            // Handle successful login here (e.g., redirect to another page)
+
             window.location.href = redirectURL;
         } catch (error) {
             console.error('Error:', error);

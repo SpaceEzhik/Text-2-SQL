@@ -1,11 +1,11 @@
-from fastapi import Depends, Response, Request, HTTPException, status, APIRouter
+from fastapi import Depends, Response, Request, APIRouter
 
 # from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import settings
 from db import db_helper_admin
-from frontend.frontend import templates
+from frontend import templates
 from . import auth_prefix
 from .exceptions import UnauthorizedException
 from .helpers import (
@@ -86,10 +86,6 @@ async def auth_refresh_jwt(
     if not (
         user.is_active and user.refresh_token == request.cookies.get("refresh_token")
     ):
-        # raise HTTPException(
-        #     status_code=status.HTTP_403_FORBIDDEN,
-        #     detail="Пользователь деактивирован",
-        # )
         raise UnauthorizedException("user deactivated, login required")
     access_token, refresh_token = await create_and_store_tokens(
         response,

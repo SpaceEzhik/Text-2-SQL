@@ -22,7 +22,3 @@ async def main():
 if __name__ == "__main__":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(main())
-
-# 123@mail.ru
-# 123
-# developer

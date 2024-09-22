@@ -1,7 +1,6 @@
-from fastapi import Request, Response
+from fastapi import Request
 
-from config import settings
-from frontend.frontend import templates
+from frontend import templates
 from security import auth_prefix
 
 

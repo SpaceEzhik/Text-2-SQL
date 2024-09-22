@@ -6,8 +6,7 @@ from starlette.responses import HTMLResponse
 
 from db.crud import execute_sql
 from db import db_helper_api
-
-from frontend.frontend import templates
+from frontend import templates
 from guardian import anti_fraud
 from schemas import ModelRequest, DBRequest
 from security import auth_prefix
