@@ -44,7 +44,7 @@ with open(
     DB_CONTEXT = file.read()
 
 
-class DbSettings(BaseModel):
+class DBSettings(BaseModel):
     url_api: str = "[ДАННЫЕ УДАЛЕНЫ]"
     url_admin: str = "[ДАННЫЕ УДАЛЕНЫ]"
     echo: bool = False
@@ -54,7 +54,7 @@ class AuthJWTSettings(BaseModel):
     private_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-private.pem"
     public_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-public.pem"
     algorithm: str = "RS256"
-    access_token_expire_minutes: int = 10
+    access_token_expire_minutes: int = 1
     refresh_token_expire_days: int = 1
     bcrypt_work_factor: int = 12
 
@@ -100,7 +100,7 @@ class ApiSettings(BaseModel):
 
 
 class Settings(BaseSettings):
-    db: DbSettings = DbSettings()
+    db: DBSettings = DBSettings()
     auth_jwt: AuthJWTSettings = AuthJWTSettings()
     security: SecuritySettings = SecuritySettings()
     guardian: GuardianSettings = GuardianSettings()
