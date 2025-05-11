@@ -42,7 +42,7 @@ Here is the setup process for MySQL, but you are free to use another relational 
    permissions.
 5. Create a users table: If you're setting up authentication, use
    the [users table script](./security/users.sql). If not, simply
-   comment `APIRouter` dependencies [here](./api/api_v1/views.py).
+   set `enabled` attribute to `False` in `SecuritySettings` in the [config file](./config.py).
 
 ### Ollama setup
 

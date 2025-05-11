@@ -66,7 +66,9 @@ class AuthJWTSettings(BaseModel):
 
 class SecuritySettings(BaseModel):
     user_group_rights: dict[str, tuple] = USER_GROUP_RIGHTS
+    user_group_default: str = "developer"
     auth_url_prefix: str = "/auth"
+    enabled: bool = True
 
 
 class GuardianSettings(BaseModel):
