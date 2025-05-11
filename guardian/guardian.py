@@ -22,3 +22,8 @@ class FineTunedBERT:
             logits = outputs.logits
             predicted_class = torch.argmax(logits, dim=1).item()
         return predicted_class  # 1 == not fraud class, 0 == fraud class
+
+
+class DummyBERT:
+    def predict(self, text):
+        return 1

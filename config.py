@@ -66,6 +66,7 @@ class SecuritySettings(BaseModel):
 
 class GuardianSettings(BaseModel):
     path: str = str(GUARDIAN_PATH)
+    enabled: bool = True
 
 
 class CoreLLMSettings(BaseModel):
