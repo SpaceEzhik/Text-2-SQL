@@ -29,6 +29,8 @@ easy query input and result viewing.
 
 ### Database setup
 
+Here is the setup process for MySQL, but you are free to use another relational database.
+
 1. Set up your MySQL server: Follow
    the [MySQL getting started guide](https://dev.mysql.com/doc/mysql-getting-started/en/).
 2. Create your database structure: Use the [DDL script](./sql_generator/creation_commented.sql) to describe your domain
@@ -56,8 +58,8 @@ easy query input and result viewing.
 
 ### Guardian setup
 
-If you're skipping the anti-fraud system, simply comment `if` statement
-in `prompt_handler` [function](./api/api_v1/views.py).
+If you're skipping the anti-fraud system, simply set `enabled` attribute to `False`
+in `GuardianSettings` in the [config file](./config.py).
 
 Otherwise, you should train it yourself:
 
@@ -89,7 +91,9 @@ Otherwise, you should train it yourself:
    instructions [here](https://pytorch.org/get-started/locally/).
 6. Generate RSA keys: Issue RSA keys using [instructions](./security/certs/README.md).
 
-7. Configure `DBSettings` and `CoreLLMSettings` in the [config file](./config.py) to match
+7. Configure `DBSettings` (which involves creating `.env` file as in the [example](.env.example)) and `CoreLLMSettings`
+   in the [config file](./config.py)
+   to match
    your [database](#database-setup) setup and the LLM chosen during the [Ollama setup](#ollama-setup).
 
 8. Run the application:
@@ -101,7 +105,7 @@ Otherwise, you should train it yourself:
 
 ## Usage
 
-Once the application is running, open your browser and navigate to:
+Once the application is running **locally**, open your browser and navigate to:
 
 - `http://localhost:8000/api/v1` for the application.
 - `http://localhost:8000/docs` for the auto-generated API documentation (Swagger UI).

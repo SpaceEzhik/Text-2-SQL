@@ -1,14 +1,19 @@
+import os
+
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from pathlib import Path
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).parent
 GUARDIAN_PATH = BASE_DIR / "guardian" / "ruBERT_1.0acc"
 
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
 OLLAMA_CONFIG = {
-    "model": "llama3:8b-instruct-q4_0",
+    "model": "llama3.1:8b-instruct-q4_K_M",
     "stream": False,
     "keep_alive": "5m",
 }
@@ -45,8 +50,8 @@ with open(
 
 
 class DBSettings(BaseModel):
-    url_api: str = "[ДАННЫЕ УДАЛЕНЫ]"
-    url_admin: str = "[ДАННЫЕ УДАЛЕНЫ]"
+    url_api: str = os.getenv("DB_URL_API")
+    url_admin: str = os.getenv("DB_URL_ADMIN")
     echo: bool = False
 
 
