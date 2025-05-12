@@ -48,13 +48,18 @@ def prompt_form(request: Request):
 
 
 @router.post("/submit_prompt")
-async def prompt_handler(model_request: ModelRequest) -> dict[str, str]:
+async def prompt_handler(
+    model_request: ModelRequest,
+    db_session: AsyncSession = Depends(db_helper_api.session_dependency),
+) -> dict[str, str]:
     if not anti_fraud.predict(model_request.prompt):
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Запрос не относится к выбранной базе данных",
         )
-    sql_query = await generate_sql(model_request.prompt, settings.core_llm.db_context)
+    sql_query = await generate_sql(
+        model_request.prompt, settings.core_llm.db_context, db_session
+    )
     return {"sql_query": sql_query}
 
 

@@ -3,7 +3,7 @@ from fastapi import Request
 from time import time, localtime, asctime
 import logging
 
-logging.basicConfig(level=logging.INFO, filename="log.txt")
+logging.basicConfig(level=logging.INFO, filename="log.txt", encoding="utf-8")
 logger = logging.getLogger(__name__)
 
 

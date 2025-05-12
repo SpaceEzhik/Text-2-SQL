@@ -1,6 +1,6 @@
 import os
 
-from pydantic import BaseModel
+from pydantic import BaseModel, NonNegativeInt
 from pydantic_settings import BaseSettings
 from pathlib import Path
 from dotenv import load_dotenv
@@ -11,12 +11,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).parent
 GUARDIAN_PATH = BASE_DIR / "guardian" / "ruBERT_1.0acc"
 
-OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
-OLLAMA_CONFIG = {
-    "model": "llama3.1:8b-instruct-q4_K_M",
-    "stream": False,
-    "keep_alive": "5m",
-}
+OLLAMA_ENDPOINT = "http://localhost:11434/v1"
 
 USER_GROUP_RIGHTS = {
     "developer": ("select", "insert", "update", "delete"),
@@ -38,9 +33,10 @@ This query will run on a database whose schema is represented below:
 `{1}`
 
 **Ensure that the output contains only the SQL query and no additional text, symbols or comments.**
+**Do not generate markdown code block like ```sql```**
 
 ### Response:
-Based on your instructions, here is the SQL query (with no additional text, symbols or comments) I have generated to meet the prompt `{0}`:
+Based on your instructions, here is the SQL query (with no additional text, symbols or comments, no markdown code syntax) I have generated to meet the prompt `{0}`:
 """
 
 with open(
@@ -59,7 +55,7 @@ class AuthJWTSettings(BaseModel):
     private_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-private.pem"
     public_key_path: Path = BASE_DIR / "security" / "certs" / "jwt-public.pem"
     algorithm: str = "RS256"
-    access_token_expire_minutes: int = 1
+    access_token_expire_minutes: int = 10
     refresh_token_expire_days: int = 1
     bcrypt_work_factor: int = 12
 
@@ -78,7 +74,12 @@ class GuardianSettings(BaseModel):
 
 class CoreLLMSettings(BaseModel):
     url: str = OLLAMA_ENDPOINT
-    config: dict = OLLAMA_CONFIG
+    # model_name: str = "gemini-2.5-flash-preview-04-17"
+    # provider: str = "gemini"
+    model_name: str = "llama3.1:8b-instruct-q4_K_M"
+    provider: str = "ollama"
+    retry_count: NonNegativeInt = 5
+    api_key: str = os.getenv("GEMINI_API_KEY")
     prompt: str = PROMPT_TEMPLATE
     db_context: str = DB_CONTEXT
 

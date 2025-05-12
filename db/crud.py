@@ -12,7 +12,7 @@ async def execute_sql(
     db_session: AsyncSession, sql_query: str
 ) -> tuple[dict, ...] | None:
     query_type = sql_query.strip().lower().split()[0]
-    if query_type == "select":
+    if query_type == "select" or query_type == "explain":
         try:
             result = await db_session.execute(text(sql_query))
             keys = tuple(result.keys())

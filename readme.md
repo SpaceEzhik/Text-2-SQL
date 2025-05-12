@@ -6,9 +6,10 @@ This project is a Text-2-SQL web application powered by large language models (L
 database using natural language input.
 
 It features a custom BERT-based model trained to detect and filter potentially unrelated or malicious queries. The
-backend is built using FastAPI for efficient API management, with SQLAlchemy utilized for seamless database
-interactions, and MySQL serves as the database management system. A user-friendly interface has been implemented for
-easy query input and result viewing.
+backend is built using FastAPI for efficient API management. Interaction with the configured LLMs (such as Ollama or
+Gemini) is managed and validated using Pydantic AI, ensuring structured and type-safe communication. SQLAlchemy is
+utilized for seamless database interactions, and MySQL serves as the database management system. A functional web
+interface allows for easy query input and result viewing.
 
 ## Navigation
 
@@ -44,17 +45,28 @@ Here is the setup process for MySQL, but you are free to use another relational 
    the [users table script](./security/users.sql). If not, simply
    set `enabled` attribute to `False` in `SecuritySettings` in the [config file](./config.py).
 
-### Ollama setup
+### LLM setup
+
+This project uses [Pydantic AI](https://ai.pydantic.dev/) to interface with LLMs. Support for Ollama and Gemini models
+is implemented, but you can
+easily add other models compatible with Pydantic AI (see their [docs](https://ai.pydantic.dev/models/)).
+
+#### Ollama setup
 
 1. Install [Ollama](https://ollama.com/)
 
-3. Download a model: Choose a model from the [Ollama library](https://ollama.com/library). During development, I
+2. Download a model: Choose a model from the [Ollama library](https://ollama.com/library). During development, I
    used [llama3 8b-instruct](https://ollama.com/library/llama3:8b-instruct-q4_0), but feel
    free to experiment:
    ```bash
     ollama pull [model name]
     ```
-3. Run Ollama: Once installed, get Ollama running.
+3. Run Ollama: Ensure the Ollama service is running.
+
+#### Gemini setup
+
+1. Get Gemini API key: Follow the [instructions](https://ai.google.dev/gemini-api/docs/api-key).
+2. Configure your environment: Add your acquired key to `.env` file.
 
 ### Guardian setup
 
@@ -76,7 +88,7 @@ Otherwise, you should train it yourself:
     cd fastapi-app
     ```
 
-3. Create a virtual environment: Follow the official [venv guide](https://docs.python.org/3/library/venv.html).
+2. Create a virtual environment: Follow the official [venv guide](https://docs.python.org/3/library/venv.html).
 
 3. Install [Poetry](https://python-poetry.org/):
     ```bash
@@ -91,11 +103,9 @@ Otherwise, you should train it yourself:
    instructions [here](https://pytorch.org/get-started/locally/).
 6. Generate RSA keys: Issue RSA keys using [instructions](./security/certs/README.md).
 
-7. Configure `DBSettings` (which involves creating `.env` file as in the [example](.env.example)) and `CoreLLMSettings`
-   in the [config file](./config.py)
-   to match
-   your [database](#database-setup) setup and the LLM chosen during the [Ollama setup](#ollama-setup).
-
+7. Configure `DBSettings` in the config file (add your credentials to the `.env` file, see `.env.example` for
+   structure) to match your [database setup](#database-setup). Also configure `CoreLLMSettings` to match your chosen LLM
+   from the [LLM setup](#llm-setup) section.
 8. Run the application:
     ```bash
     python app.py
@@ -133,7 +143,7 @@ Here, [ruBERT model](https://huggingface.co/DeepPavlov/rubert-base-cased) acts a
 queries before they reach the main language model, which generates SQL queries from natural language input.
 
 To achieve the goals of the project, a training [dataset](./guardian/dataset.csv) consisting of 1,200 samples was
-created in accordance with database specifics. The dataset includes
+created, tailored to the database specifics. The dataset includes
 600 examples of relevant queries and 600 examples of irrelevant queries. Each query was manually annotated for the
 binary classification task, where each query is labeled as either relevant or irrelevant (classes 1 and 0,
 respectively).
@@ -171,8 +181,6 @@ poetry run pytest -v
    user experience.
 4. Simplify auto-redirect logic: The current auto-redirect setup is somewhat chaotic, and a proper frontend will help
    streamline this process.
-5. Enhance model output processing: Improving the parsing and processing of model outputs is a key step to enhancing the
-   overall application performance.
 
 ---
 
