@@ -84,8 +84,8 @@ Otherwise, you should train it yourself:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-repo/fastapi-app.git
-    cd fastapi-app
+    git clone https://github.com/SpaceEzhik/Text-2-SQL
+    cd Text-2-SQL
     ```
 
 2. Create a virtual environment: Follow the official [venv guide](https://docs.python.org/3/library/venv.html).
@@ -164,7 +164,7 @@ through the `SecuritySettings` in [config file](./config.py).
 Run the tests using:
 
 ```bash
-poetry run pytest -v
+pytest -v
 ```
 
 ---
