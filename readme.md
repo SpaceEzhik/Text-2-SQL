@@ -34,8 +34,8 @@ Here is the setup process for MySQL, but you are free to use another relational 
 
 1. Set up your MySQL server: Follow
    the [MySQL getting started guide](https://dev.mysql.com/doc/mysql-getting-started/en/).
-2. Create your database structure: Use the [DDL script](./sql_generator/creation_commented.sql) to describe your domain
-   to the LLM.
+2. Create your database structure: Use the [DDL script](./sql_generator/creation_commented.sql) to define your database
+   schema, which helps the LLM understand your domain.
 3. Create a user for the API: Follow
    these [instructions to create a MySQL user](https://dev.mysql.com/doc/refman/8.4/en/create-user.html). This user will
    be used by the API to execute queries.
@@ -66,11 +66,11 @@ easily add other models compatible with Pydantic AI (see their [docs](https://ai
 #### Gemini setup
 
 1. Get Gemini API key: Follow the [instructions](https://ai.google.dev/gemini-api/docs/api-key).
-2. Configure your environment: Add your acquired key to `.env` file.
+2. Configure your environment: Add your acquired key to the `.env` file.
 
 ### Guardian setup
 
-If you're skipping the anti-fraud system, simply set `enabled` attribute to `False`
+If you're skipping the anti-fraud system, simply set the `enabled` attribute to `False`
 in `GuardianSettings` in the [config file](./config.py).
 
 Otherwise, you should train it yourself:
@@ -90,14 +90,14 @@ Otherwise, you should train it yourself:
 
 2. Create a virtual environment: Follow the official [venv guide](https://docs.python.org/3/library/venv.html).
 
-3. Install [Poetry](https://python-poetry.org/):
+3. Install [uv](https://docs.astral.sh/uv/):
     ```bash
-    pip install poetry
+    pip install uv
     ```
 
 4. Install the required dependencies:
     ```bash
-    poetry install
+    uv sync
     ```
 5. Install PyTorch: Depending on your setup, you might need a specific version of PyTorch. Follow the
    instructions [here](https://pytorch.org/get-started/locally/).
@@ -117,9 +117,9 @@ Otherwise, you should train it yourself:
 
 Once the application is running **locally**, open your browser and navigate to:
 
-- `http://localhost:8000/api/v1` for the application.
-- `http://localhost:8000/docs` for the auto-generated API documentation (Swagger UI).
-- `http://localhost:8000/redoc` for the ReDoc documentation.
+- `http://<your url>:<your port>/api/v1` for the application.
+- `http://<your url>:<your port>/docs` for the auto-generated API documentation (Swagger UI).
+- `http://<your url>:<your port>/redoc` for the ReDoc documentation.
 
 ---
 
@@ -164,7 +164,7 @@ through the `SecuritySettings` in [config file](./config.py).
 Run the tests using:
 
 ```bash
-pytest -v
+uv run pytest -v
 ```
 
 ---
